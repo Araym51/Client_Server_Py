@@ -9,11 +9,11 @@
 --- используйте списки и циклы, не дублируйте функции
 """
 
-klass = b'class'
-funkciya = b'function'
-metod = b'method'
+word_1 = b'class'
+word_2 = b'function'
+word_3 = b'method'
 
-word_list = [klass, funkciya, metod]
+word_list = [word_1, word_2, word_3]
 
 for item in word_list:
     print(type(item))

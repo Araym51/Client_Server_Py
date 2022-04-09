@@ -21,11 +21,11 @@ for i in words:
 
 print('-----')
 
-dev = '\u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u0430'
-sock = '\u0441\u043e\u043a\u0435\u0442'
-decor = '\u0434\u0435\u043a\u043e\u0440\u0430\u0442\u043e\u0440'
+word_4 = '\u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u0430'
+word_5 = '\u0441\u043e\u043a\u0435\u0442'
+word_6 = '\u0434\u0435\u043a\u043e\u0440\u0430\u0442\u043e\u0440'
 
-uni_words = [dev, sock, decor]
+uni_words = [word_4, word_5, word_6]
 
 for j in uni_words:
     print(type(j))
