@@ -1,0 +1,11 @@
+{
+    "orders": [
+        {
+            "buyer": "Egorka",
+            "date": "10.04.2022",
+            "item": "ASUS ROG STRIX G17 G713IM-HX017W",
+            "price": 169280,
+            "quantity": 1
+        }
+    ]
+}
