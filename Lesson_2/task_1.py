@@ -57,17 +57,20 @@ def get_data(files):
     for file in files:
         with open(file, 'r') as data:
             for line in data:
-                splited = line.split()
-                if splited[0] == 'Название':
+                if line[:8] == 'Название':
+                    splited = line.split()
                     temp = ' '.join(splited[2:])
                     os_name_list.append(temp)
-                if splited[0] == 'Код':
+                if line[:3] == 'Код':
+                    splited = line.split()
                     temp = ' '.join(splited[2:])
                     os_code_list.append(temp)
-                if (splited[0] == 'Изготовитель') and (splited[1] == 'системы:'):
+                if line[:21] == 'Изготовитель системы:':
+                    splited = line.split()
                     temp = ' '.join(splited[2:])
                     os_prod_list.append(temp)
-                if splited[0] == 'Тип':
+                if line[:3] == 'Тип':
+                    splited = line.split()
                     temp = ' '.join(splited[2:])
                     os_type_list.append(temp)
     main_data.append(header)
