@@ -27,6 +27,7 @@ with open('file.yaml', 'w', encoding='utf-8') as yaml_file:
     yaml.dump(dict_to_yaml, yaml_file, default_flow_style=True, allow_unicode=True)
 
 with open('file.yaml', 'r', encoding='utf-8') as file:
+    dict_from_yaml = yaml.load(file, Loader=yaml.SafeLoader)
     print(file.read()) # результат команды print: {dict: {price: 1000 €, price_2: 100 $}, int: 123, list: [1, one]}
 
-
+print(dict_from_yaml == dict_to_yaml)

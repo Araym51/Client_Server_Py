@@ -87,7 +87,7 @@ def write_to_csv(data_list):
     :param data_list: сюда передавать список со значениями
     :return: возвращает csv файл
     """
-    with open('result.csv', 'w') as file:
+    with open('result.csv', 'w', encoding='utf-8') as file:
         file_writer = csv.writer(file, quoting=csv.QUOTE_NONNUMERIC)
         for row in data_list:
             file_writer.writerow(row)

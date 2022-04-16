@@ -56,13 +56,28 @@
 import json
 from pathlib import Path
 
-dict_to_json = {
+dict_to_json = [{
     'item': 'ASUS ROG STRIX G17 G713IM-HX017W',
     'quantity': 1,
     'price': 169280,
     'buyer': 'Egorka',
     'date': '10.04.2022'
-}
+    },
+    {
+        "item": "принтер",
+        "quantity": "10",
+        "price": "6700",
+        "buyer": "Ivanov I.I.",
+        "date": "24.09.2017"
+    },
+    {
+        "item": "scaner",
+        "quantity": "20",
+        "price": "10000",
+        "buyer": "Petrov P.P.",
+        "date": "11.01.2018"
+    }
+]
 
 
 def write_order_to_json(record_data, indent):
@@ -75,6 +90,8 @@ def write_order_to_json(record_data, indent):
     path = Path('orders.json')
     data = json.loads(path.read_text(encoding='utf-8'))
     data["orders"].append(record_data)
-    path.write_text(json.dumps(data, sort_keys=True, indent=indent), encoding='utf-8')
+    path.write_text(json.dumps(data, sort_keys=True, indent=indent, ensure_ascii=False), encoding='utf-8')
 
-write_order_to_json(dict_to_json, 4)
+
+for items in dict_to_json:
+    write_order_to_json(items, 4)
