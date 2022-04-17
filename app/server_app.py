@@ -20,15 +20,39 @@ def process_client_message(message):
 
 
 def main():
+    #
+    try:
+        if '-p' in sys.argv:
+            server_port = int(sys.argv[sys.argv.index('-p') + 1])  # получаем параметры, на каком порте запускать сервер
+        else:
+            server_port = SERVER_PORT
+        if server_port < 1024 or server_port > 65535:
+            raise ValueError
+    except IndexError:
+        print('Не указан номер порта после параметра -р')
+        sys.exit(1)
+    except ValueError:
+        print('Номер порта должен быть в интервале от 1024 до 65535')
+        sys.exit(1)
+
+    try:
+        if '-a' in sys.argv:
+            server_ip = sys.argv[sys.argv.index('-a') + 1]  # получаем ip адрес сервера
+        else:
+            server_ip = SERVER_IP
+    except IndexError:
+        print('После параметра -а неободимо указать ip адрес')
+        sys.exit(1)
+
     # готовим сокет
     SERV_SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # оствобождаем порт:
     SERV_SOCKET.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # назначаем параметры сокета из констант:
-    SERV_SOCKET.bind((SERVER_IP, SERVER_PORT))
+    SERV_SOCKET.bind((server_ip, server_port))
 
     # слушаем порт
-    SERV_SOCKET.bind(MAX_CONNECTIONS)
+    SERV_SOCKET.listen(MAX_CONNECTIONS)
 
     # запускаем сервер:
     while True:
