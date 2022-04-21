@@ -3,7 +3,6 @@ import json
 from ..common.constants import *
 from ..common.utils import send_message, recieve_message
 import unittest
-from unittest import TestCase
 
 
 class TestSock:
@@ -37,7 +36,7 @@ class TestSock:
         return json_test_message.encode(ENCODING)
 
 
-class TestServer(TestCase):
+class TestServer(unittest.TestCase):
     """
     класс для тестирования отправки и принятия сообщений
     """
