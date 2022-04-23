@@ -3,7 +3,7 @@ import sys
 import json
 import socket
 import time
-from common.constants import *
+from common.constants import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, ERROR, SERVER_PORT, SERVER_IP
 from common.utils import recieve_message, send_message
 
 
