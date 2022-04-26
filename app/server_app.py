@@ -3,7 +3,11 @@ import sys
 import json
 from common.constants import *
 from common.utils import send_message, recieve_message
+import logging
+import loging.server_conf_log
+from errors import IncorrectDataRecievedError
 
+SERVER_LOGGER = logging.getLogger('server')
 
 def process_client_message(message):
     """
@@ -11,6 +15,7 @@ def process_client_message(message):
     :param message:
     :return:
     """
+    SERVER_LOGGER.debug(f'Разбор сообщение от клиента: {message}')
     if ACTION in message and message[ACTION] == PRESENCE and TIME in message and USER in message and message[USER][ACCOUNT_NAME] == 'Guest':
         return {RESPONSE: 200}
     return {
