@@ -5,6 +5,8 @@ import socket
 import time
 from common.constants import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, ERROR, SERVER_PORT, SERVER_IP
 from common.utils import recieve_message, send_message
+import logging
+import loging.client_conf_log
 from errors import ReqFieldMissingError
 
 CLIENT_LOGGER = logging.getLogger('client')
@@ -23,6 +25,7 @@ def create_presence(account_name='Guest'):
         }
     }
     CLIENT_LOGGER.debug(f'Сформировано {PRESENCE} сообщение для {account_name}')
+    # print(f'Сформировано {PRESENCE} сообщение для {account_name}')
     return presence_message
 
 
@@ -33,6 +36,7 @@ def process_answer(message):
     :return:
     """
     CLIENT_LOGGER.debug(f'расшифровка сообщения от сервера: {message}')
+    # print(f'расшифровка сообщения от сервера: {message}')
     if RESPONSE in message:
         if message[RESPONSE] == 200:
             return '200 : OK'
@@ -60,6 +64,8 @@ def main():
     CLIENT_SOCK.connect((server_adress, server_port))
     presence_message = create_presence()
     send_message(CLIENT_SOCK, presence_message)
+    CLIENT_LOGGER.debug(f'клиент запущен с параметрами {server_adress} : {server_port}')
+    # print(f'клиент запущен с параметрами {server_adress} : {server_port}')
     try:
         answer = process_answer(recieve_message(CLIENT_SOCK))
         CLIENT_LOGGER.info(f'принят ответ от сервера {answer}')

@@ -34,10 +34,14 @@ def main():
         if server_port < 1024 or server_port > 65535:
             raise ValueError
     except IndexError:
-        print('Не указан номер порта после параметра -р')
+        SERVER_LOGGER.critical('Попытка запуска с заданными параметрами без '
+                               'указания номера портаа после параметра -р')
+        # print('Не указан номер порта после параметра -р')
         sys.exit(1)
     except ValueError:
-        print('Номер порта должен быть в интервале от 1024 до 65535')
+        SERVER_LOGGER.critical('Запуск сервера с неверным параметром номера порта'
+                               'Номер порта должен быть в интервале от 1024 до 65535')
+        # print('Номер порта должен быть в интервале от 1024 до 65535')
         sys.exit(1)
 
     try:
@@ -49,6 +53,8 @@ def main():
         print('После параметра -а неободимо указать ip адрес')
         sys.exit(1)
 
+    SERVER_LOGGER.info(f'Запущен сервер, порт для подключений: {server_port}, '
+                       f'ip: {server_ip}')
     # готовим сокет
     SERV_SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # оствобождаем порт:
@@ -62,14 +68,23 @@ def main():
     # запускаем сервер:
     while True:
         client, client_adress = SERV_SOCKET.accept()
+        SERVER_LOGGER.info(f'установлено соединение с {client_adress}')
         try:
             message_from_client = recieve_message(client)
-            print(message_from_client)
+            SERVER_LOGGER.debug(f'получено сообщение {message_from_client}')
+            # print(message_from_client)
             response = process_client_message(message_from_client)
+            SERVER_LOGGER.info(f'сформирован ответ клиенту: {response}')
             send_message(client, response)
             client.close()
         except (ValueError, json.JSONDecodeError):
-            print('Что-то пошло не по плану')
+            SERVER_LOGGER.error(f'Не удалось декодировать JSON строку, полученную от '
+                                f'клиента {client_adress}. Соединение закрывается.')
+            # print('Что-то пошло не по плану')
+            client.close()
+        except IncorrectDataRecievedError:
+            SERVER_LOGGER.error(f'приняты некорректные данные от {client_adress}.'
+                                f'Соединение разорвано')
             client.close()
 
 

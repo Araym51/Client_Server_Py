@@ -2,7 +2,7 @@ import sys
 import os
 import logging
 from app.common.constants import LOGGING_LEVEL
-sys.path.append('..')
+sys.path.append('../')
 
 
 # задаём форму вывода для логов:
@@ -10,7 +10,7 @@ CLIENT_LOG_FORMAT = logging.Formatter('%(asctime)s %(levelname)s %(filename)s %(
 
 # задаём файл для логов
 PATH = os.path.dirname(os.path.abspath(__file__))
-PATH = os.path.join(PATH, 'clien.log')
+PATH = os.path.join(PATH, 'client.log')
 
 # потоки вывода логов
 STREAM_HANDLER = logging.StreamHandler(sys.stderr)
@@ -18,17 +18,17 @@ STREAM_HANDLER = logging.StreamHandler(sys.stderr)
 STREAM_HANDLER.setFormatter(CLIENT_LOG_FORMAT)
 STREAM_HANDLER.setLevel(logging.ERROR)
 #устанавливаем кодировку
-LOG_FILE = logging.FileHandler(PATH, encoding='utf-8')
+LOG_FILE = logging.FileHandler(PATH, encoding='utf8')
 LOG_FILE.setFormatter(CLIENT_LOG_FORMAT)
 
 #настройки регистратора
-CLIENT_LOGGER = logging.getLogger('client')
-CLIENT_LOGGER.addHandler(STREAM_HANDLER)
-CLIENT_LOGGER.addHandler(LOG_FILE)
-CLIENT_LOGGER.setLevel(LOGGING_LEVEL)
+LOGGER = logging.getLogger('client')
+LOGGER.addHandler(STREAM_HANDLER)
+LOGGER.addHandler(LOG_FILE)
+LOGGER.setLevel(LOGGING_LEVEL)
 
 if __name__ == '__main__':
-    CLIENT_LOGGER.critical('Критическая ошибка')
-    CLIENT_LOGGER.error('Ошибка')
-    CLIENT_LOGGER.debug('Отладочная информация')
-    CLIENT_LOGGER.info('Информационное сообщение')
+    LOGGER.critical('Критическая ошибка')
+    LOGGER.error('Ошибка')
+    LOGGER.debug('Отладочная информация')
+    LOGGER.info('Информационное сообщение')
