@@ -8,9 +8,11 @@ from common.utils import recieve_message, send_message
 import logging
 import loging.client_conf_log
 from errors import ReqFieldMissingError
+from logging_deco import log
 
 CLIENT_LOGGER = logging.getLogger('client')
 
+@log
 def create_presence(account_name='Guest'):
     """
     функция сообщает серверу о присутствии account_name
@@ -28,7 +30,7 @@ def create_presence(account_name='Guest'):
     # print(f'Сформировано {PRESENCE} сообщение для {account_name}')
     return presence_message
 
-
+@log
 def process_answer(message):
     """
     функция разбирает ответ сервера

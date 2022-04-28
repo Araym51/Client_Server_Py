@@ -1,6 +1,8 @@
 import json
 from .constants import MAX_PACKAGE_LENGHT, ENCODING
+from app.logging_deco import log
 
+@log
 def recieve_message(client):
     """
     общая функция для приема сообщений.
@@ -18,6 +20,7 @@ def recieve_message(client):
     raise ValueError
 
 
+@log
 def send_message(sock, message):
     """
     Функция для отправки сообщения.
