@@ -1,11 +1,15 @@
-
+import logging
 import sys
 import json
 import socket
 import time
-from common.constants import *
+from common.constants import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, ERROR, SERVER_PORT, SERVER_IP
 from common.utils import recieve_message, send_message
+import logging
+import loging.client_conf_log
+from errors import ReqFieldMissingError
 
+CLIENT_LOGGER = logging.getLogger('client')
 
 def create_presence(account_name='Guest'):
     """
@@ -20,6 +24,8 @@ def create_presence(account_name='Guest'):
             ACCOUNT_NAME: account_name
         }
     }
+    CLIENT_LOGGER.debug(f'Сформировано {PRESENCE} сообщение для {account_name}')
+    # print(f'Сформировано {PRESENCE} сообщение для {account_name}')
     return presence_message
 
 
@@ -29,6 +35,8 @@ def process_answer(message):
     :param message:
     :return:
     """
+    CLIENT_LOGGER.debug(f'расшифровка сообщения от сервера: {message}')
+    # print(f'расшифровка сообщения от сервера: {message}')
     if RESPONSE in message:
         if message[RESPONSE] == 200:
             return '200 : OK'
@@ -46,18 +54,31 @@ def main():
         server_adress = SERVER_IP
         server_port = SERVER_PORT
     except ValueError:
-        print('Порт необходимо указать в диапазоне от 1024 до 65535')
+        CLIENT_LOGGER.critical(
+            f'Попытка запуска клиента с недопустимым параметром номера порта {server_port}'
+            f'Допустимые порты с 1024 по 65535. Клиент завершает работу'
+        )
+        # print('Порт необходимо указать в диапазоне от 1024 до 65535')
 
     CLIENT_SOCK = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     CLIENT_SOCK.connect((server_adress, server_port))
     presence_message = create_presence()
     send_message(CLIENT_SOCK, presence_message)
+    CLIENT_LOGGER.debug(f'клиент запущен с параметрами {server_adress} : {server_port}')
+    # print(f'клиент запущен с параметрами {server_adress} : {server_port}')
     try:
         answer = process_answer(recieve_message(CLIENT_SOCK))
-        print(answer)
-    except (ValueError, json.JSONDecodeError):
-        print('Не удалось декодировать сообщение')
-
+        CLIENT_LOGGER.info(f'принят ответ от сервера {answer}')
+        # print(answer)
+    except json.JSONDecodeError:
+        CLIENT_LOGGER.error('Ошибка обработки JSON строки')
+        # print('Не удалось декодировать сообщение')
+    except ConnectionRefusedError:
+        CLIENT_LOGGER.critical(f'Не удалось подключиться к серверу {server_adress}:{server_port},'
+                               f'запрос на подключение отвергнут')
+    except ReqFieldMissingError as field:
+        CLIENT_LOGGER.error(f'В принятом словаре отсутствует необходимое поле:'
+                            f'{field.missing_field}')
 
 if __name__ == '__main__':
     main()

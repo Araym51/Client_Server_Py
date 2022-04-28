@@ -1,6 +1,10 @@
+import logging
+
 """Постоянные настройки для сервера"""
 
 # Порт для сетевого взаимодействия
+
+
 SERVER_PORT = 8888
 
 # ip адрес сервера
@@ -25,3 +29,6 @@ ACCOUNT_NAME = 'account_name'
 PRESENCE = 'presence'
 RESPONSE = 'response'
 ERROR = 'error'
+
+# уровень логированрия:
+LOGGING_LEVEL = logging.DEBUG

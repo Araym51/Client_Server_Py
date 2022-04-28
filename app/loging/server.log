@@ -1,0 +1,12 @@
+2022-04-26 20:18:50,891 INFO server_app.py установлено соединение с ('127.0.0.1', 63352)
+2022-04-26 20:18:50,891 DEBUG server_app.py получено сообщение {'action': 'presence', 'time': 1650993530.8910828, 'user': {'account_name': 'Guest'}}
+2022-04-26 20:18:50,892 DEBUG server_app.py Разбор сообщение от клиента: {'action': 'presence', 'time': 1650993530.8910828, 'user': {'account_name': 'Guest'}}
+2022-04-26 20:18:50,892 INFO server_app.py сформирован ответ клиенту: {'response': 200}
+2022-04-26 20:20:09,079 INFO server_app.py установлено соединение с ('127.0.0.1', 63397)
+2022-04-26 20:20:09,080 DEBUG server_app.py получено сообщение {'action': 'presence', 'time': 1650993609.0790918, 'user': {'account_name': 'Guest'}}
+2022-04-26 20:20:09,080 DEBUG server_app.py Разбор сообщение от клиента: {'action': 'presence', 'time': 1650993609.0790918, 'user': {'account_name': 'Guest'}}
+2022-04-26 20:20:09,080 INFO server_app.py сформирован ответ клиенту: {'response': 200}
+2022-04-26 21:09:45,295 INFO server_app.py установлено соединение с ('127.0.0.1', 65054)
+2022-04-26 21:09:45,295 DEBUG server_app.py получено сообщение {'action': 'presence', 'time': 1650996585.2940207, 'user': {'account_name': 'Guest'}}
+2022-04-26 21:09:45,295 DEBUG server_app.py Разбор сообщение от клиента: {'action': 'presence', 'time': 1650996585.2940207, 'user': {'account_name': 'Guest'}}
+2022-04-26 21:09:45,295 INFO server_app.py сформирован ответ клиенту: {'response': 200}
