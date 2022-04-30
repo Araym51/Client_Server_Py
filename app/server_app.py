@@ -66,30 +66,26 @@ def main():
     # назначаем параметры сокета из констант:
     SERV_SOCKET.bind((server_ip, server_port))
 
+    # таймаут
+    SERV_SOCKET.settimeout(0.5)
+    # список клиентов
+    clients_list = []
+    # очередь сообщений
+    message_list = []
+
     # слушаем порт
     SERV_SOCKET.listen(MAX_CONNECTIONS)
 
     # запускаем сервер:
     while True:
-        client, client_adress = SERV_SOCKET.accept()
-        SERVER_LOGGER.info(f'установлено соединение с {client_adress}')
         try:
-            message_from_client = recieve_message(client)
-            SERVER_LOGGER.debug(f'получено сообщение {message_from_client}')
-            # print(message_from_client)
-            response = process_client_message(message_from_client)
-            SERVER_LOGGER.info(f'сформирован ответ клиенту: {response}')
-            send_message(client, response)
-            client.close()
-        except (ValueError, json.JSONDecodeError):
-            SERVER_LOGGER.error(f'Не удалось декодировать JSON строку, полученную от '
-                                f'клиента {client_adress}. Соединение закрывается.')
-            # print('Что-то пошло не по плану')
-            client.close()
-        except IncorrectDataRecievedError:
-            SERVER_LOGGER.error(f'приняты некорректные данные от {client_adress}.'
-                                f'Соединение разорвано')
-            client.close()
+            #пытаемся соединится с клиентом:
+            client, client_adress = SERV_SOCKET.accept()
+        except OSError:
+            pass
+        else:
+            SERVER_LOGGER.info(f'Установлено соединение с {client_adress}')
+            clients_list.append(client) # закончил тут, продолжить дальше
 
 
 if __name__ == '__main__':
