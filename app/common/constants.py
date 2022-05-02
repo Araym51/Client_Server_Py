@@ -24,11 +24,14 @@ ACTION = 'action'
 TIME = 'time'
 USER = 'user'
 ACCOUNT_NAME = 'account_name'
+SENDER = 'sender'
 
 # дополнительные ключи
 PRESENCE = 'presence'
 RESPONSE = 'response'
 ERROR = 'error'
+MESSAGE = 'message'
+MESSAGE_TEXT = 'message text'
 
 # уровень логированрия:
 LOGGING_LEVEL = logging.DEBUG
