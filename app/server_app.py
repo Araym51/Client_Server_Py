@@ -6,9 +6,11 @@ from common.utils import send_message, recieve_message
 import logging
 import loging.server_conf_log
 from errors import IncorrectDataRecievedError
+from logging_deco import log
 
 SERVER_LOGGER = logging.getLogger('server')
 
+@log
 def process_client_message(message):
     """
     функция для проверки корректности входящих данных от клиентов
