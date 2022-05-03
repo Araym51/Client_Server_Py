@@ -5,22 +5,104 @@ import json
 import socket
 import time
 from common.constants import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, ERROR, SERVER_PORT, SERVER_IP, \
-    MESSAGE, SENDER, MESSAGE_TEXT
+    MESSAGE, SENDER, MESSAGE_TEXT, EXIT, DESTINATION
 from common.utils import recieve_message, send_message
 import logging
 import loging.client_conf_log
-from errors import ReqFieldMissingError, ServerError
+from errors import ReqFieldMissingError, ServerError, IncorrectDataRecievedError
 from logging_deco import log
 
 CLIENT_LOGGER = logging.getLogger('client')
 
 
 @log
+def exit_message(acoount_name):
+    """Функция создает сообщение о выходе из программы"""
+    CLIENT_LOGGER.info(f'{acoount_name} вышел из программы.')
+    return {
+        ACTION: EXIT,
+        TIME: time.time(),
+        ACCOUNT_NAME: acoount_name
+    }
+
+
+@log
+def message_from_server(sock, my_username):
+    """функция обработчик сообщений от других пользователей, поступающих с сервера"""
+    while True:
+        try:
+            message = recieve_message(sock)
+            if ACTION in MESSAGE and message[
+                ACTION] == MESSAGE and SENDER in message and DESTINATION in message and MESSAGE_TEXT in message and \
+                    message[DESTINATION] == my_username:
+                print(f'\n Получено сообщение от пользователя {message[SENDER]}:'
+                      f'\n {message[MESSAGE_TEXT]}')
+                CLIENT_LOGGER.info(f'\n Получено сообщение от пользователя {message[SENDER]}:'
+                                   f'\n {message[MESSAGE_TEXT]}')
+            else:
+                CLIENT_LOGGER.error(f'принято некорректное сообщение от сервера {message}')
+        except IncorrectDataRecievedError:
+            CLIENT_LOGGER.error(f'Не удалось декодировать сообщение')
+        except (OSError, ConnectionError, ConnectionAbortedError, ConnectionResetError, json.JSONDecodeError):
+            CLIENT_LOGGER.critical(f'потеряно соединение с сервером')
+            break
+
+
+@log
+def create_message(sock, acoount_name = 'Guest'):
+    """
+    Функция запрашивает, кому отправить сообщение, и отправляет полученные данные на срвер
+    """
+    to_user = input("Введите получателя сообщения: ")
+    message = input("Введите сообщение")
+    message_dict = {
+        ACTION: MESSAGE,
+        SENDER: acoount_name,
+        DESTINATION: to_user,
+        TIME: time.time(),
+        MESSAGE_TEXT: message
+    }
+    CLIENT_LOGGER.debug(f'Сформировано сообщение: {message_dict}')
+    try:
+        send_message(sock, message_dict)
+        CLIENT_LOGGER.info(f'Отправлено сообщение пользователю {to_user}')
+    except:
+        CLIENT_LOGGER.critical(f'Потеряно соединение с сервером')
+        sys.exit(1)
+
+
+@log
+def user_interactive(sock, username):
+    """Функция взаимодействия с пользователем, запрашивает команды, отправляет сообщения"""
+    print_help()
+    while True:
+        command = input('Введите команду: ')
+        if command == 'message':
+            create_message(sock, username)
+        elif command == 'help':
+            print_help()
+        elif command == 'exit':
+            send_message(sock, exit_message(username))
+            print('завершение работы')
+            CLIENT_LOGGER.info(f'{username} завершил работу')
+            time.sleep(0.5)
+            break
+        else:
+            print('Команда не распознана, попробойте снова. help - вывести поддерживаемые команды.')
+
+
+def print_help():
+    """Функция выводящяя справку по использованию"""
+    print('Поддерживаемые команды:')
+    print('message - отправить сообщение. Кому и текст будет запрошены отдельно.')
+    print('help - вывести подсказки по командам')
+    print('exit - выход из программы')
+
+
+@log
 def create_presence(account_name='Guest'):
     """
     функция сообщает серверу о присутствии account_name
-    :param account_name:
-    :return:
     """
     presence_message = {
         ACTION: PRESENCE,
@@ -85,7 +167,7 @@ def message_from_server(message):
     else:
         CLIENT_LOGGER.error(f'Получен некорректный ответ от сервера {message}')
 
-
+# продолжить со 164 строки
 @log
 def create_message(sock, account_name='Guest'):
     message = input('Введите сообщение для отправки или \" !!! \" для закрытия программы')
@@ -151,7 +233,6 @@ def main():
                 except (ConnectionResetError, ConnectionError, ConnectionAbortedError):
                     CLIENT_LOGGER.error(f'Потеряно соединение с сервером: {server_adress}')
                     sys.exit(1)
-
 
 
 if __name__ == '__main__':
