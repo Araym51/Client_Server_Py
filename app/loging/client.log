@@ -40,3 +40,12 @@
 2022-04-28 20:12:10,219 DEBUG client_app.py расшифровка сообщения от сервера: {'response': 200}
 2022-04-28 20:12:10,220 DEBUG logging_deco.py вызвана функция process_answer с параметрами ({'response': 200},), {}.Вызов из модуля __main__.вызов из функции main()вызов из функции main
 2022-04-28 20:12:10,220 INFO client_app.py принят ответ от сервера 200 : OK
+2022-05-03 10:51:13,125 DEBUG logging_deco.py вызвана функция arg_parser с параметрами (), {}.Вызов из модуля __main__.вызов из функции main()вызов из функции main
+2022-05-03 10:51:13,125 INFO client_app.py Запущен клиент с параметрами: адрес сервера: 127.0.0.1, порт сервера: 8888,режим работы: listen
+2022-05-03 10:51:13,127 DEBUG client_app.py Сформировано presence сообщение для Guest
+2022-05-03 10:51:13,129 DEBUG logging_deco.py вызвана функция create_presence с параметрами (), {}.Вызов из модуля __main__.вызов из функции main()вызов из функции main
+2022-05-03 10:51:13,130 DEBUG logging_deco.py вызвана функция send_message с параметрами (<socket.socket fd=308, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 57925), raddr=('127.0.0.1', 8888)>, {'action': 'presence', 'time': 1651564273.127904, 'user': {'account_name': 'Guest'}}), {}.Вызов из модуля common.utils.вызов из функции main()вызов из функции main
+2022-05-03 10:51:13,672 DEBUG logging_deco.py вызвана функция recieve_message с параметрами (<socket.socket fd=308, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 57925), raddr=('127.0.0.1', 8888)>,), {}.Вызов из модуля common.utils.вызов из функции main()вызов из функции main
+2022-05-03 10:51:13,672 DEBUG client_app.py расшифровка сообщения от сервера: {'response': 200}
+2022-05-03 10:51:13,673 DEBUG logging_deco.py вызвана функция process_answer с параметрами ({'response': 200},), {}.Вызов из модуля __main__.вызов из функции main()вызов из функции main
+2022-05-03 10:51:13,673 INFO client_app.py становлено соединение с сервером. Ответ от сервера: 200 : OK
