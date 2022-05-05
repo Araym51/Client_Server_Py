@@ -3,6 +3,7 @@ import logging
 import sys
 import json
 import socket
+import threading
 import time
 from common.constants import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, ERROR, SERVER_PORT, SERVER_IP, \
     MESSAGE, SENDER, MESSAGE_TEXT, EXIT, DESTINATION
@@ -138,23 +139,18 @@ def arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('addr', default=SERVER_IP, nargs='?')
     parser.add_argument('port', default=SERVER_PORT, type=int, nargs='?')
-    parser.add_argument('-m', '--mode', default='listen', nargs='?')
+    parser.add_argument('-n', '--name', default=None, nargs='?')
     namespace = parser.parse_args(sys.argv[1:])
     server_ip = namespace.addr
     server_port = namespace.port
-    client_mode = namespace.mode
+    client_name = namespace.name
 
     if not 1023 < server_port < 65536:
         CLIENT_LOGGER.critical(f'Попытка запуска клиента с неподходящим номером порта: {server_port}. '
                                f'Допустимы адреса с 1024 до 65535. Клиент завершается.')
         sys.exit(1)
 
-    if client_mode not in ('listen', 'send'):
-        CLIENT_LOGGER.critical(f'запуск в недопустимом режиме работы {client_mode},'
-                               f'допустимые режимы: listen, send')
-        sys.exit(1)
-
-    return server_ip, server_port, client_mode
+    return server_ip, server_port, client_name
 
 
 @log
@@ -167,32 +163,18 @@ def message_from_server(message):
     else:
         CLIENT_LOGGER.error(f'Получен некорректный ответ от сервера {message}')
 
-# продолжить со 164 строки
-@log
-def create_message(sock, account_name='Guest'):
-    message = input('Введите сообщение для отправки или \" !!! \" для закрытия программы')
-    if message == '!!!':
-        sock.close()
-        CLIENT_LOGGER.info('Завершение работы по команде пользователя')
-        print('Выход из программы. Возвращайтесь!')
-        sys.exit(0)
-    message_dict = {
-        ACTION: MESSAGE,
-        TIME: time.time(),
-        ACCOUNT_NAME: account_name,
-        MESSAGE_TEXT: message
-    }
-    CLIENT_LOGGER.debug(f'Сформировано сообщение: {message_dict}')
-    return message_dict
-
 
 def main():
-    server_adress, server_port, client_mode = arg_parser()
+    # прветственное сообщение при запуске:
+    print('клиентский модуль консольного мессенджера')
+
+    # загружаем параметры переданные в коммандной строке
+    server_adress, server_port, client_name = arg_parser()
 
     CLIENT_LOGGER.info(f'Запущен клиент с параметрами: '
                        f'адрес сервера: {server_adress}, '
-                       f'порт сервера: {server_port},'
-                       f'режим работы: {client_mode}')
+                       f' порт сервера: {server_port},'
+                       f' имя пользователя: {client_name}')
 
     try:
         CLIENT = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -200,6 +182,7 @@ def main():
         send_message(CLIENT, create_presence())
         answer = process_answer(recieve_message(CLIENT))
         CLIENT_LOGGER.info(f'становлено соединение с сервером. Ответ от сервера: {answer}')
+        print(f'установлено соединение с сервером {client_name}')
     except json.JSONDecodeError:
         CLIENT_LOGGER.error('Не удалось декодировать json строку')
         sys.exit(1)
@@ -214,25 +197,20 @@ def main():
                                f'конечный компьютер отверг запрос на подключение.')
         sys.exit(1)
     else:
-        if client_mode == 'send':
-            print('Готов к отправке сообщений')
-        else:
-            print('Готов к приему сообщений')
+        reciever = threading.Thread(target=message_from_server, args=(CLIENT, client_name) )
+        reciever.daemon = True
+        reciever.start()
+
+        user_interface = threading.Thread(target=user_interactive, args=(CLIENT, client_name))
+        user_interface.daemon = True
+        user_interface.start()
+        CLIENT_LOGGER.debug('Процессы запущены')
+
         while True:
-            # режим отправки сообщений:
-            if client_mode == 'send':
-                try:
-                    send_message(CLIENT, create_message(CLIENT))
-                except (ConnectionResetError, ConnectionError, ConnectionAbortedError):
-                    CLIENT_LOGGER.error(f'Потеряно соединение с сервером: {server_adress}')
-                    sys.exit(1)
-            # режим приема сообщений:
-            if client_mode == 'listen':
-                try:
-                    message_from_server(recieve_message(CLIENT))
-                except (ConnectionResetError, ConnectionError, ConnectionAbortedError):
-                    CLIENT_LOGGER.error(f'Потеряно соединение с сервером: {server_adress}')
-                    sys.exit(1)
+            time.sleep(1)
+            if reciever.isAlive() and user_interface.is_alive():
+                continue
+            break
 
 
 if __name__ == '__main__':
