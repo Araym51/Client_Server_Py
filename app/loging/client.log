@@ -163,3 +163,4 @@
 2022-05-06 12:01:43,937 DEBUG logging_deco.py вызвана функция create_message с параметрами (<socket.socket fd=316, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 54203), raddr=('127.0.0.1', 8888)>, 'mara'), {}.Вызов из модуля __main__.
 2022-05-06 12:01:44,278 CRITICAL client_app.py потеряно соединение с сервером
 2022-05-06 12:01:44,279 DEBUG logging_deco.py вызвана функция message_from_server с параметрами (<socket.socket fd=316, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 54203), raddr=('127.0.0.1', 8888)>, 'mara'), {}.Вызов из модуля __main__.
+2022-05-06 14:24:34,347 DEBUG logging_deco.py вызвана функция arg_parser с параметрами (), {}.Вызов из модуля __main__.

@@ -193,20 +193,17 @@ def main():
                                f'конечный компьютер отверг запрос на подключение.')
         sys.exit(1)
     else:
+        # если есть соединение с сервером, запускаем процесс приема сообщений
         receiver = threading.Thread(target=message_from_server, args=(CLIENT, client_name))
         receiver.daemon = True
         receiver.start()
 
-        # затем запускаем отправку сообщений и взаимодействие с пользователем.
+        # запускаем отправку сообщений и взаимодействие с пользователем.
         user_interface = threading.Thread(target=user_interactive, args=(CLIENT, client_name))
         user_interface.daemon = True
         user_interface.start()
         CLIENT_LOGGER.debug('Запущены процессы')
 
-        # Watchdog основной цикл, если один из потоков завершён,
-        # то значит или потеряно соединение или пользователь
-        # ввёл exit. Поскольку все события обработываются в потоках,
-        # достаточно просто завершить цикл.
         while True:
             time.sleep(1)
             if receiver.is_alive() and user_interface.is_alive():
