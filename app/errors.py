@@ -14,6 +14,7 @@ class IncorrectDataRecievedError(Exception):
     def __str__(self):
         return 'Принято некорректное сообщение от клиента'
 
+
 class ServerError(Exception):
     def __init__(self, text):
         self.text = text

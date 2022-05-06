@@ -1,6 +1,8 @@
+import sys
 import json
 from .constants import MAX_PACKAGE_LENGHT, ENCODING
-from app.logging_deco import log
+from logging_deco import log # выглядит как ошибка, но благодаря sys.path.append('../') работает
+sys.path.append('../')
 
 @log
 def recieve_message(client):

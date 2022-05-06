@@ -1,7 +1,7 @@
 import sys
 import os
 import logging
-from app.common.constants import LOGGING_LEVEL
+from common.constants import LOGGING_LEVEL # выглядит как ошибка, но благодаря sys.path.append('../') работает
 sys.path.append('../')
 
 
