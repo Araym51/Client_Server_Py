@@ -54,7 +54,7 @@ def create_message(sock, acoount_name = 'Guest'):
     Функция запрашивает, кому отправить сообщение, и отправляет полученные данные на срвер
     """
     to_user = input("Введите получателя сообщения: ")
-    message = input("Введите сообщение")
+    message = input("Введите сообщение: ")
     message_dict = {
         ACTION: MESSAGE,
         SENDER: acoount_name,
