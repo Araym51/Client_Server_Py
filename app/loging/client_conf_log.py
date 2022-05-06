@@ -2,7 +2,7 @@ import sys
 import os
 import logging
 from app.common.constants import LOGGING_LEVEL
-sys.path.append('../')
+sys.path.append('..')
 
 
 # задаём форму вывода для логов:

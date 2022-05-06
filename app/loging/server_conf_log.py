@@ -5,7 +5,7 @@ import os
 import logging
 import logging.handlers
 from app.common.constants import LOGGING_LEVEL
-sys.path.append('../')
+sys.path.append('..')
 
 # формат логов для сервера
 SERVER_FORMATTER = logging.Formatter('%(asctime)s %(levelname)s %(filename)s %(message)s')
